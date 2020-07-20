@@ -2,18 +2,15 @@
 // The Router is to list all of the URL's or routes that we are on the lookout for.
 
 const express = require("express");
-
 // The express framework will express a mini application
 const router = express.Router();
+// Import/require in the userController file
+const userController = require('./controllers/userController');
 
-// router.get()
-router.get("/", function (req, res) {
-  // If there is a get request to the homepage, we use res.render() to render the home page template
-  res.render("home-guest");
-});
+// router.get() will first pull from the URL specified, then we get userController.home to specify which file and function we want to display
+router.get("/", userController.home);
+// router.post will tell our app what to do when it gets a post request to a specific URL - here we setting it with userController.register for the registration form on the home page
+router.post('/register', userController.register);
 
-router.get("/about", function (req, res) {
-  res.send("This is our about page");
-});
 
 module.exports = router;
