@@ -19,7 +19,15 @@ exports.register = function (req, res) {
     let user = new User(req.body);
     // call our register method set up in User.js
     user.register();
-    res.send('Thanks for registering');
+    // errors was set up as an array in User.js
+    // length is property in an array that counts how many items are in the array
+    if (user.errors.length) {
+        // if there are errors, send this
+        res.send(user.errors)
+    } else {
+        // if there are no errors, we go to this
+        res.send("Congrats! There are no errors.")
+    }
 };
 
 // This is the function that gets called when someone visits the base URL
