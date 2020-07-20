@@ -13,6 +13,9 @@ app.use(express.json())
 
 // This will allow use to access files from the public folder
 app.use(express.static("public"));
+
+// This will allow images to be displayed. 
+app.use("/public/images/", express.static("./public/images"));
 // The first views is an express option, and the 2nd is the name of our views folder, which will pull our content to display in app.js
 app.set("views", "views");
 // This is where we tell express which template engine we're using, which will be ejs.

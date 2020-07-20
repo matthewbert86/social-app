@@ -83,7 +83,8 @@ body, .tooltip
 }
 
 .display-3 {
-  font-size: 4.35rem;
+    font-size: 4.35rem;
+    margin-top: -40px;
 }
 
 @media (max-width: 768px) {
@@ -372,4 +373,13 @@ textarea.tall-textarea {
   border: none;
   outline: none;
   font-size: .75rem;
+}
+
+
+/* LOGO */
+
+.siteLogo {
+    width: 300px;
+    margin-top: -80px;
+    padding-bottom: 0;
 }

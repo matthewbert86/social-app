@@ -5,7 +5,9 @@ let User = function(data) {
     this.data = data
     
     // Add a method to our blueprint
-    User.prototype.register = function() {}
+    User.prototype.register = function() {
+        
+    }
 }
 
 module.exports = User
