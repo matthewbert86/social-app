@@ -5,6 +5,12 @@ const express = require("express");
 const app = express();
 
 const router = require("./router");
+
+// Add submitted user data onto our request object
+app.use(express.urlencoded({extended: false}))
+// This is another common way to get data, from a json file
+app.use(express.json())
+
 // This will allow use to access files from the public folder
 app.use(express.static("public"));
 // The first views is an express option, and the 2nd is the name of our views folder, which will pull our content to display in app.js
