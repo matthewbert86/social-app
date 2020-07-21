@@ -25,4 +25,6 @@ app.set("view engine", "ejs");
 // in spit #2, we set it to router, since that's what we are exporting
 app.use("/", router);
 
-app.listen(3000);
+// we are exporting our express app to db.js, so we can open the database first
+module.exports = app
+
