@@ -71,6 +71,28 @@ let User = function (data) {
     }
   };
 
+  // This is our method for login
+  User.prototype.login = function() {
+    // Promise() is used to create new promises
+    return new Promise((resolve, reject) => {
+      // this will check for strings of text
+    this.cleanUp()
+    // lets set up our crud operations. This will read data from the database
+      // contents in fineOne() tells Mongo what to look for, to find a match for user input.
+      // is a function that findOne will call when the first operation is complete
+    usersCollection.findOne({username: this.data.username}).then((attemptedUser) => {
+      // if () will check to see if username and password is a successful match
+      if (attemptedUser && attemptedUser.password == this.data.password) {
+        resolve("Congrats!");
+      } else {
+        reject("Invalud username/password");
+      }
+    }).catch(function() {
+      reject("Please try again later.")
+    })
+  })
+}
+
   // Add a method to our blueprint
   User.prototype.register = function () {
     // Step #1 - validate user data

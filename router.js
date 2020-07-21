@@ -12,5 +12,8 @@ router.get("/", userController.home);
 // router.post will tell our app what to do when it gets a post request to a specific URL - here we setting it with userController.register for the registration form on the home page
 router.post('/register', userController.register);
 
+// This router will tell our app when someone has logged in.
+router.post('/login', userController.login)
+
 
 module.exports = router;

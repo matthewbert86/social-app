@@ -1,11 +1,21 @@
-/***  Our goal in this file is rto export multiple functions that can be accessed from another javascript file ****/
+/***  Our goal in this file is to export multiple functions that can be accessed from another javascript file ****/
 
 // Imports function from User.js
 const User = require('../models/User');
 
 // Node is going to look for a property named login so it knows what it needs to export from this file
-exports.login = function() {
-
+exports.login = function(req, res) {
+    // model to create a new user object 
+    // We pass in the user data submitted between User()
+    let user = new User(req.body)
+    user.login().then(function(result) {
+        // if our promise calls resolve
+        res.send(result)
+    }).catch(function(e){
+        // if our promise calls reject
+        res.send(e)
+    })
+    
 };
 
 exports.logout = function () {
