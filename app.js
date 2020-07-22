@@ -3,12 +3,16 @@
 const express = require("express");
 // npm install express-session
 const session = require("express-session");
+// npm install connect-mongo, we then use (session) to reference the express-session package.
+const MongoStore = require("connect-mongo")(session)
 // We are calling express through this variable
 const app = express();
 
 // set up configuration options on how to use sessions
 let sessionOptions = session({
     secret: "JavaScript is cool",
+    // Override sessionOptions from just storing data in memory
+    store: new MongoStore({client: require("./db")}),
     resave: false,
     saveUninitialized: false,
     //maxeAge: math is equal to one day before the cookie expires

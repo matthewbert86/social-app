@@ -3,7 +3,7 @@
 const bcrypt = require('bcryptjs');
 
 // This will return our database object so we can perform crud operations with it.
-const usersCollection = require('../db').collection('users');
+const usersCollection = require('../db').db().collection('users');
 
 // We are requiring in our validator package, so we can validate email addresses from the user input
 const validator = require("validator");
