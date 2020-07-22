@@ -14,6 +14,7 @@ router.post('/register', userController.register);
 
 // This router will tell our app when someone has logged in.
 router.post('/login', userController.login)
-
+// This router will tell out app when someone has logged out.
+router.post('/logout', userController.logout);
 
 module.exports = router;

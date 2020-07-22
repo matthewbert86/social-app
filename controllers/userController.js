@@ -12,7 +12,9 @@ exports.login = function(req, res) {
         // leverage session that is unique per browser visitor/user
         req.session.user = {favColor: "blue", username: user.data.username}
         // if our promise calls resolve
-        res.send(result)
+        req.session.save(function() {
+            res.redirect('/')
+        })
     }).catch(function(e){
         // if our promise calls reject
         res.send(e)
@@ -20,8 +22,12 @@ exports.login = function(req, res) {
     
 };
 
-exports.logout = function () {
-
+exports.logout = function (req, res) {
+    // If an incoming request has a cookie matching a session id, this will find it in database and destroy that session
+    req.session.destroy(function() {
+        // When user clicks on "logout" this will send them back to the home/login screen
+        res.redirect('/');
+    })
 };
 
 // exports.register will be called by router whenever a user clicks the submit button on the registration form
