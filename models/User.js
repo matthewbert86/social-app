@@ -1,9 +1,9 @@
 // npm install bcryptjs
 // require in bcrypt, which will be leveraged below in the register function
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
 
 // This will return our database object so we can perform crud operations with it.
-const usersCollection = require('../db').collection('users')
+const usersCollection = require('../db').collection('users');
 
 // We are requiring in our validator package, so we can validate email addresses from the user input
 const validator = require("validator");
@@ -20,7 +20,7 @@ let User = function (data) {
   User.prototype.cleanUp = function() {
     
     if (typeof(this.data.username) !="string") {
-      this.data.username = ""
+      this.data.username = "";
     }
     if (typeof this.data.email != "string") {
       this.data.email = "";
@@ -93,7 +93,7 @@ let User = function (data) {
         reject("Invalud username/password");
       }
     }).catch(function() {
-      reject("Please try again later.")
+      reject("Please try again later.");
     })
   })
 }
@@ -106,11 +106,11 @@ let User = function (data) {
     // Step #2 - only if there are no validation errors, then save the user data into a database
     if (!this.errors.length) {
       // hash user password
-      let salt = bcrypt.genSaltSync(10)
+      let salt = bcrypt.genSaltSync(10);
       // overwrite user password value
-      this.data.password = bcrypt.hashSync(this.data.password, salt)
+      this.data.password = bcrypt.hashSync(this.data.password, salt);
       // Insert/create new document into users database collection
-      usersCollection.insertOne(this.data)
+      usersCollection.insertOne(this.data);
     }
   };
 };

@@ -1,8 +1,22 @@
 // We use "const" over "let" because this is a constant variable - it's not going to change. It makes for more readability in the code.
 // require() is use when we need to require in a package, which will be express
 const express = require("express");
+// npm install express-session
+const session = require("express-session");
 // We are calling express through this variable
 const app = express();
+
+// set up configuration options on how to use sessions
+let sessionOptions = session({
+    secret: "JavaScript is cool",
+    resave: false,
+    saveUninitialized: false,
+    //maxeAge: math is equal to one day before the cookie expires
+    cookie: {maxAge: 1000 * 60 * 60 * 24, httpOnly: true}
+})
+
+// tell express to use our session settings 
+app.use(sessionOptions);
 
 const router = require("./router");
 

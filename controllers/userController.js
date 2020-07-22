@@ -9,6 +9,8 @@ exports.login = function(req, res) {
     // We pass in the user data submitted between User()
     let user = new User(req.body)
     user.login().then(function(result) {
+        // leverage session that is unique per browser visitor/user
+        req.session.user = {favColor: "blue", username: user.data.username}
         // if our promise calls resolve
         res.send(result)
     }).catch(function(e){
@@ -42,6 +44,12 @@ exports.register = function (req, res) {
 
 // This is the function that gets called when someone visits the base URL
 exports.home = function (req, res) {
-    res.render('home-guest')
+    if (req.session.user) {
+        // If they are a logged in user, this will take them to their main profile page
+        res.send("Welcome to the application!")
+    } else {
+        // If they are not logged in, this will take the user to the main sign up/login screen
+        res.render("home-guest");
+    }
 };
 
