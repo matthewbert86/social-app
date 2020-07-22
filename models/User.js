@@ -1,3 +1,7 @@
+// npm install bcryptjs
+// require in bcrypt, which will be leveraged below in the register function
+const bcrypt = require('bcryptjs')
+
 // This will return our database object so we can perform crud operations with it.
 const usersCollection = require('../db').collection('users')
 
@@ -59,8 +63,8 @@ let User = function (data) {
     if (this.data.password.length > 0 && this.data.password.length < 12) {
       this.errors.push("Password must be at least 12 characters");
     }
-    if (this.data.password.length > 100) {
-      this.errors.push("password cannot exceed 100 characrers");
+    if (this.data.password.length > 50) {
+      this.errors.push("password cannot exceed 150 characrers");
     }
     // Lets check for the minimum and maximum length of the username
     if (this.data.username.length > 0 && this.data.username.length < 3) {
@@ -82,7 +86,8 @@ let User = function (data) {
       // is a function that findOne will call when the first operation is complete
     usersCollection.findOne({username: this.data.username}).then((attemptedUser) => {
       // if () will check to see if username and password is a successful match
-      if (attemptedUser && attemptedUser.password == this.data.password) {
+        // if user password entered is a match, it will compare to hashed password in attemptedUser.password to see if it returns as true or false
+      if (attemptedUser && bcrypt.compareSync(this.data.password, attemptedUser.password)) {
         resolve("Congrats!");
       } else {
         reject("Invalud username/password");
@@ -100,6 +105,10 @@ let User = function (data) {
     this.validate();
     // Step #2 - only if there are no validation errors, then save the user data into a database
     if (!this.errors.length) {
+      // hash user password
+      let salt = bcrypt.genSaltSync(10)
+      // overwrite user password value
+      this.data.password = bcrypt.hashSync(this.data.password, salt)
       // Insert/create new document into users database collection
       usersCollection.insertOne(this.data)
     }
