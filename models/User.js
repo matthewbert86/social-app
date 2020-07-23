@@ -13,9 +13,8 @@ let User = function (data) {
   // "this" points toward whatever is calling/executing the current function
   // = data is calling what just got called in our function, and we are storing it in a property (this.data) that we can use later
   this.data = data;
-
   this.errors = [];
-
+}
 // Lets check to see if the user submitted anything other than a string
   User.prototype.cleanUp = function() {
     
@@ -35,11 +34,12 @@ let User = function (data) {
       username: this.data.username.trim().toLowerCase(),
       email: this.data.email.trim().toLowerCase(),
       password: this.data.password,
-    };
+    }
   }
 
   // Lets validate the user data
-  User.prototype.validate = function () {
+  User.prototype.validate = function() {
+    return new Promise(async (resolve, reject) => {
     // if the user leaves the user name field blank
     if (this.data.username == "") {
       this.errors.push("You must provide a username");
@@ -73,7 +73,21 @@ let User = function (data) {
     if (this.data.username.length > 30) {
       this.errors.push("Username cannot exceed 30 characrers");
     }
-  };
+
+    // Only if username is valid, then check to see if it's available
+    if (this.data.username.length > 2 && this.data.username.length < 31 && validator.isAlphanumeric(this.data.username)) {
+      let usernameExists = await usersCollection.findOne({username: this.data.username})
+      if (usernameExists) {this.errors.push("That username is already taken.")}
+    }
+
+     // Only if email is valid, then check to see if it's available
+    if (validator.isEmail(this.data.email)) {
+      let emailExists = await usersCollection.findOne({email: this.data.email})
+      if (emailExists) {this.errors.push("That email is in use by existing account.")}
+    }
+    resolve()
+  })
+  }
 
   // This is our method for login
   User.prototype.login = function() {
@@ -99,10 +113,11 @@ let User = function (data) {
 }
 
   // Add a method to our blueprint
-  User.prototype.register = function () {
+  User.prototype.register = function() {
+    return new Promise(async (resolve, reject) => {
     // Step #1 - validate user data
-    this.cleanUp();
-    this.validate();
+    this.cleanUp()
+    await this.validate()
     // Step #2 - only if there are no validation errors, then save the user data into a database
     if (!this.errors.length) {
       // hash user password
@@ -110,9 +125,12 @@ let User = function (data) {
       // overwrite user password value
       this.data.password = bcrypt.hashSync(this.data.password, salt);
       // Insert/create new document into users database collection
-      usersCollection.insertOne(this.data);
+      await usersCollection.insertOne(this.data);
+      resolve()
+    } else {
+      reject(this.errors)
     }
-  };
-};
+  })
+  }
 
-module.exports = User;
+module.exports = User

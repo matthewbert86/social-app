@@ -1,7 +1,7 @@
 /***  Our goal in this file is to export multiple functions that can be accessed from another javascript file ****/
 
 // Imports function from User.js
-const User = require('../models/User');
+const User = require('../models/User')
 
 // Node is going to look for a property named login so it knows what it needs to export from this file
 exports.login = function(req, res) {
@@ -39,26 +39,33 @@ exports.register = function (req, res) {
     // Within the () we are passing the form field values the user has submitted
     let user = new User(req.body);
     // call our register method set up in User.js
-    user.register();
-    // errors was set up as an array in User.js
-    // length is property in an array that counts how many items are in the array
-    if (user.errors.length) {
-        // if there are errors, send this
-        res.send(user.errors)
-    } else {
-        // if there are no errors, we go to this
-        res.send("Congrats! There are no errors.")
-    }
+    user.register().then(() => {
+        // Update session data and send user back to home if the registration was a success
+        req.session.user = {username: user.data.username}
+        req.session.save(function () {
+          res.redirect("/");
+        });
+    }).catch((regErrors) => {
+        // use flash package to send any errors to our session data
+        regErrors.forEach(function(error) {
+            req.flash('regErrors', error)
+        })
+        // manually rell our session to save
+        req.session.save(function() {
+            res.redirect('/')
+        })
+    });
+    
 };
 
 // This is the function that gets called when someone visits the base URL
 exports.home = function (req, res) {
     if (req.session.user) {
         // If they are a logged in user, this will take them to their main profile page
-        res.render("home-dashboard", {username: req.session.user.username});
+        res.render('home-dashboard', {username: req.session.user.username});
     } else {
         // If they are not logged in, this will take the user to the main sign up/login screen
-        res.render("home-guest", {errors: req.flash('errors')});
+        res.render('home-guest', {errors: req.flash('errors'), regErrors: req.flash('regErrors')});
     }
 };
 
