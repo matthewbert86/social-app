@@ -3,6 +3,22 @@
 // Imports function from User.js
 const User = require('../models/User')
 
+
+// function for mustBeLoggedIn set up in router.js
+exports.mustBeLoggedIn = function(req, res, next) {
+    if (req.session.user) {
+        // if the user IS logged in
+        next();
+    } else {
+        // if the user IS NOT logged in - set up a flash error message
+        req.flash('errors', "You must be logged in to perform that action");
+        // Manually save session data
+        req.session.save(function() {
+            res.redirect('/')
+        })
+    }
+}
+
 // Node is going to look for a property named login so it knows what it needs to export from this file
 exports.login = function(req, res) {
     // model to create a new user object 

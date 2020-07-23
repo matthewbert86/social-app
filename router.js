@@ -6,6 +6,11 @@ const express = require("express");
 const router = express.Router();
 // Import/require in the userController file
 const userController = require('./controllers/userController');
+// Import/require in the postController file
+const postController = require('./controllers/postController');
+
+/******   USER RELATED ROUTES   ******/
+
 
 // router.get() will first pull from the URL specified, then we get userController.home to specify which file and function we want to display
 router.get("/", userController.home);
@@ -16,5 +21,9 @@ router.post('/register', userController.register);
 router.post('/login', userController.login)
 // This router will tell out app when someone has logged out.
 router.post('/logout', userController.logout);
+
+
+/******   POST RELATED ROUTES   ******/
+router.get('/create-post', userController.mustBeLoggedIn ,postController.viewCreateScreen)
 
 module.exports = router;
