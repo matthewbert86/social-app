@@ -1,12 +1,12 @@
 // npm install bcryptjs
 // require in bcrypt, which will be leveraged below in the register function
 const bcrypt = require('bcryptjs');
-
 // This will return our database object so we can perform crud operations with it.
 const usersCollection = require('../db').db().collection('users');
-
 // We are requiring in our validator package, so we can validate email addresses from the user input
 const validator = require("validator");
+// npm install md5 - this is to encrypt email info attached to profile gravitars
+const md5 = require('md5');
 
 // We are going to leverage this funtion in our userController file
 let User = function (data) {
@@ -102,6 +102,9 @@ let User = function (data) {
       // if () will check to see if username and password is a successful match
         // if user password entered is a match, it will compare to hashed password in attemptedUser.password to see if it returns as true or false
       if (attemptedUser && bcrypt.compareSync(this.data.password, attemptedUser.password)) {
+        // get the avatar attached to user email address when logging in
+        this.data = attemptedUser
+        this.getAvatar();
         resolve("Congrats!");
       } else {
         reject("Invalid username/password");
@@ -126,11 +129,16 @@ let User = function (data) {
       this.data.password = bcrypt.hashSync(this.data.password, salt);
       // Insert/create new document into users database collection
       await usersCollection.insertOne(this.data);
+      this.getAvatar();
       resolve()
     } else {
       reject(this.errors)
     }
   })
-  }
+}
+
+User.prototype.getAvatar = function() {
+  this.avatar = `https://s.gravatar.com/avatar/${md5(this.data.email)}?s=128`;
+}
 
 module.exports = User
