@@ -90,7 +90,7 @@ let User = function (data) {
       if (attemptedUser && bcrypt.compareSync(this.data.password, attemptedUser.password)) {
         resolve("Congrats!");
       } else {
-        reject("Invalud username/password");
+        reject("Invalid username/password");
       }
     }).catch(function() {
       reject("Please try again later.");

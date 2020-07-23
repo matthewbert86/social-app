@@ -4,7 +4,9 @@ const express = require("express");
 // npm install express-session
 const session = require("express-session");
 // npm install connect-mongo, we then use (session) to reference the express-session package.
-const MongoStore = require("connect-mongo")(session)
+const MongoStore = require("connect-mongo")(session);
+// npm install connect-flash
+const flash = require('connect-flash');
 // We are calling express through this variable
 const app = express();
 
@@ -21,6 +23,8 @@ let sessionOptions = session({
 
 // tell express to use our session settings 
 app.use(sessionOptions);
+// call in our flash feature, which is used to tell a user if they used an incorrect username/password on the home screen.
+app.use(flash());
 
 const router = require("./router");
 

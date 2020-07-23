@@ -16,10 +16,13 @@ exports.login = function(req, res) {
             res.redirect('/')
         })
     }).catch(function(e){
-        // if our promise calls reject
-        res.send(e)
+        // leverage our flash package if user has entered wrong info
+        req.flash('errors', e);
+        // manually tell our session to save
+        req.session.save(function(){
+            res.redirect('/')
+        })
     })
-    
 };
 
 exports.logout = function (req, res) {
@@ -55,7 +58,7 @@ exports.home = function (req, res) {
         res.render("home-dashboard", {username: req.session.user.username});
     } else {
         // If they are not logged in, this will take the user to the main sign up/login screen
-        res.render("home-guest");
+        res.render("home-guest", {errors: req.flash('errors')});
     }
 };
 
