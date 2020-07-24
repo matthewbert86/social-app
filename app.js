@@ -26,6 +26,12 @@ app.use(sessionOptions);
 // call in our flash feature, which is used to tell a user if they used an incorrect username/password on the home screen.
 app.use(flash());
 
+app.use(function(req, res, next) {
+    // we can work with an object available in ejs templates
+    res.locals.user = req.session.user;
+    next();
+})
+
 const router = require("./router");
 
 // Add submitted user data onto our request object

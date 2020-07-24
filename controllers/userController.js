@@ -78,7 +78,7 @@ exports.register = function (req, res) {
 exports.home = function (req, res) {
     if (req.session.user) {
         // If they are a logged in user, this will take them to their main profile page
-        res.render('home-dashboard', {username: req.session.user.username, avatar: req.session.user.avatar});
+        res.render('home-dashboard');
     } else {
         // If they are not logged in, this will take the user to the main sign up/login screen
         res.render('home-guest', {errors: req.flash('errors'), regErrors: req.flash('regErrors')});
