@@ -26,7 +26,7 @@ exports.login = function(req, res) {
     let user = new User(req.body)
     user.login().then(function(result) {
         // leverage session that is unique per browser visitor/user
-        req.session.user = {avatar: user.avatar, username: user.data.username}
+        req.session.user = {avatar: user.avatar, username: user.data.username, _id: user.data._id}
         // if our promise calls resolve
         req.session.save(function() {
             res.redirect('/')
@@ -57,7 +57,7 @@ exports.register = function (req, res) {
     // call our register method set up in User.js
     user.register().then(() => {
         // Update session data and send user back to home if the registration was a success
-        req.session.user = {username: user.data.username, avatar: user.avatar}
+        req.session.user = {username: user.data.username, avatar: user.avatar, _id: user.data._id}
         req.session.save(function () {
           res.redirect("/");
         });
